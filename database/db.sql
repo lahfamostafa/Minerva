@@ -1,4 +1,5 @@
-USE menava;
+create database Minerva;
+USE Minerva;
 
 create table users(
     id int auto_increment primary key,
