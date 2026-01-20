@@ -1,7 +1,7 @@
 <?php
    return [
         'host' => 'localhost',
-        'dbname' => 'maneva',
+        'dbname' => 'Minerva',
         'user' => 'root',
         'pass' => ''
 ]
