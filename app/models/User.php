@@ -1,45 +1,44 @@
 <?php
     class User{
-        private ?int $id;
-        private string $name;
-        private string $email;
-        private string $password;
-        private string $role;
-        private ?DateTime $created_at;
+        private PDO $pdo;
 
-        public function __construct(?int $id,string $name, string $email, string $password, string $role,?DateTime $created_at)
+        public function __construct()
         {
-            $this->id = $id;
-            $this->name = $name;
-            $this->email = $email;
-            $this->password = $password;
-            $this->role = $role;
-            $this->created_at = $created_at;
+            $this->pdo = Database::getInstance()->getConnection();
         }
-        public function getId(): ?int
-        {
-            return $this->id;
-        }
-        public function getName(): string
-        {
-            return $this->name;
-        }
-        public function getEmail(){
-            return $this->email;
-        }
-        public function getPassword(): string
-        {
-            return $this->password;
-        }
-        public function getRole(): string
-        {
-            return $this->role;
-        }
-        public function getCreatedAt(): ?DateTime
-        {
-            return $this->created_at;
-        }
+        public function createUser(array $data){
 
+            $sql="INSERT INTO users (name,email,password,role) VALUES(?,?,?,?)";
+            $stmt=$this->pdo->prepare($sql);
+           return $stmt->execute([$data['name'],$data['email'],$data['password'],$data['role']]);
+        }
+        public function updateUser(array $data){
+            $sql = "UPDATE users SET name = ?, email = ? WHERE id = ?";
+            $stmt= $this->pdo->prepare($sql);
+           return $stmt->execute([$data['name'],$data['email'],$data['id']]);
+        }
+        public function findById(int $id){
+            $sql="SELECT * FROM users WHERE id= ?";
+            $stmt=$this->pdo->prepare($sql);
+            $stmt->execute([$id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+        public function findUserByEmail($email){
+            $sql = "SELECT * FROM users WHERE email = ?";
+            $stmt=$this->pdo->prepare($sql);
+            $stmt->execute([$email]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+        public function getUsers(){
+            $sql="SELECT * FROM users";
+            $stmt=$this->pdo->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        
+
+
+        
 
 
 
