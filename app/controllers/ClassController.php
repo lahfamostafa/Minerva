@@ -1,6 +1,6 @@
 <?php
 
-    require_once
+    
     class ClassController {
 
         public $classService;
