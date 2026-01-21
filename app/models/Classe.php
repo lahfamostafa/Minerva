@@ -9,9 +9,9 @@
             $this->pdo = Database::getInstance()->getConnection();
         }
         public function createClasse(array $data){
-            $sql='INSERT INTO classes (name,description) VALUES(?,?)';
+            $sql='INSERT INTO classes (name,teacherId) VALUES(?,?)';
             $stmt=$this->pdo->prepare($sql);
-            return $stmt->execute([$data['name'],$data['description']]);
+            return $stmt->execute([$data['name'],$data['teacherId']]);
         }
         public function getAllClasses(){
             $sql='SELECT * FROM classes';

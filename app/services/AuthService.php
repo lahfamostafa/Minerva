@@ -49,7 +49,7 @@
             $teacher = $this->teacherModel->findByUserId($user['id']);
 
                 if(!$teacher){
-                  $  return[
+                    return[
                         'success' => false,
                         'message' => 'Teacher introuvable'
                     ];
