@@ -11,11 +11,14 @@ use PDOException;
         private function __construct()
         {
             try{
-                $config = require __DIR__.'/../../Config/DatabaseInfos.php';
-                $this->pdo = new PDO('mysql:host='.$config['host'].
-                ';dbname='.$config['dbname'],
-                 $config['user'],
-                  $config['pass']);
+                // $config = require __DIR__.'/../../Config/DatabaseInfos.php';
+                // $this->pdo = new PDO('mysql:host='.$config['host'].
+                // ';dbname ='.$config['dbname'],
+                // $config['user'],
+                // $config['pass']);
+                
+                
+                $this->pdo = new PDO("mysql:host=localhost;dbname=Minerva;charset=utf8mb4", "root","");
 
             $this->pdo->setAttribute(
                 PDO::ATTR_ERRMODE,

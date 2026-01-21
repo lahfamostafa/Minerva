@@ -1,55 +1,44 @@
 <?php
-
+namespace App\models;
 use App\core\Database;
+use PDO;
+
     class User{
         private PDO $pdo;
 
-        public function __construct()
-        {
+        public function __construct(){
             $this->pdo = Database::getInstance()->getConnection();
         }
 
-        public function createUser(array $data){
-            $sql="INSERT INTO users (name,email,password,role) VALUES(?,?,?,?)";
-            $stmt=$this->pdo->prepare($sql);
-           return $stmt->execute([$data['name'],$data['email'],$data['password'],$data['role']]);
+        public function create(string $nom , string $email, string $password , string $role){
+            $stm = $this->pdo->prepare("insert into users (name , email , password , role) values (?,?,?,?)");
+            // if($role === "student"){
+            //     email....
+            // }
+            $hashed = password_hash($password , PASSWORD_BCRYPT);
+            return $stm->execute([$nom , $email , $hashed , $role]);
         }
 
-        public function updateUser(array $data){
-            $sql = "UPDATE users SET name = ?, email = ? WHERE id = ?";
-            $stmt= $this->pdo->prepare($sql);
-           return $stmt->execute([$data['name'],$data['email'],$data['id']]);
+        public function findUserById(int $id){
+            $stm = $this->pdo->prepare("select * from users where id = ?");
+            $stm->execute([$id]);
+            $row = $stm->fetch(PDO::FETCH_ASSOC);
+
+            return $row ?: null;
         }
 
-        public function findById(int $id){
-            $sql="SELECT * FROM users WHERE id= ?";
-            $stmt=$this->pdo->prepare($sql);
-            $stmt->execute([$id]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+        public function findUserByEmail(string $email){
+            $stm = $this->pdo->prepare("select * from users where email = ?");
+            $stm->execute([$email]);
+            $row = $stm->fetch(PDO::FETCH_ASSOC);
+
+            return $row ?: null;
         }
 
-        public function findUserByEmail($email){
-            $sql = "SELECT * FROM users WHERE email = ?";
-            $stmt=$this->pdo->prepare($sql);
-            $stmt->execute([$email]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        }
-            
-        public function getUsers(){
-            $sql="SELECT * FROM users";
-            $stmt=$this->pdo->prepare($sql);
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        public function delete(int $id){
+            $stm = $this->pdo->prepare("delete from users where id = ?");
+            return $stm->execute([$id]);
         }
         
-
-
-        
-
-
-
-
     }
-
-
 ?>
