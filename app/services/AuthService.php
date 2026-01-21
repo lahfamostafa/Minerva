@@ -11,7 +11,6 @@
            $this->studentModel = new Student();
            $this->teacherModel = new Teacher();
         }
-
         public function login(string $email, string $password){
             $user = $this->userModel->findUserByEmail($email);
             if(!$user)
@@ -49,7 +48,7 @@
             $teacher = $this->teacherModel->findByUserId($user['id']);
 
                 if(!$teacher){
-                  $  return[
+                    return[
                         'success' => false,
                         'message' => 'Teacher introuvable'
                     ];
