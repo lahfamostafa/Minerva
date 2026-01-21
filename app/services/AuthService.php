@@ -14,11 +14,13 @@ use App\models\User;
             // $this->StudentModel = new Student();
             // $this->TeacherModel = new Teacher();
         }
-
-        public function login(String $email , string $password){
-            $row = $this->UserModel->findUserByEmail($email);
-            if (!$row || !password_verify($password , $row['password'])) {
-                throw new Exception("Email ou password incorrect");
+        public function login(string $email, string $password){
+            $user = $this->userModel->findUserByEmail($email);
+            if(!$user)
+                {return['success' => false,'message' => 'Email incorrect'];
+            }
+            if(!password_verify($password,$user['password'])){
+                return['success' =>false,'message' => 'Mot de passe incorrect'];
             }
 
             $_SESSION['user_id'] = $row['id'];
