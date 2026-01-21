@@ -1,5 +1,7 @@
 <?php
  namespace App\core;
+use PDO;
+use PDOException;
 
     class Database{
 
@@ -11,7 +13,7 @@
             try{
                 $config = require __DIR__.'/../../Config/DatabaseInfos.php';
                 $this->pdo = new PDO('mysql:host='.$config['host'].
-                ';dbname ='.$config['dbname'],
+                ';dbname='.$config['dbname'],
                  $config['user'],
                   $config['pass']);
 
