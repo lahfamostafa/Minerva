@@ -31,9 +31,30 @@ require_once "../config/config.php";
             $controllerName = $action[0];
             $methodeName = $action[1];
 
-            require_once __DIR__ . '/../controllers/' . $controllerName . '.php';
+            $controllerFile = __DIR__ . '/../controllers/' . $controllerName . '.php';
+
+            if(!file_exists($controllerFile)){
+                http_response_code(500);
+                echo "Controller $controllerName introuvable";
+                return;
+            }
+
+            require_once $controllerFile;
+
+            if(!class_exists($controllerName)){
+                http_response_code(500);
+                echo "Classe $controllerName introuvable";
+                return;
+            }
 
             $controller = new $controllerName();
+
+            if(!method_exists($controller , $methodeName)){
+                http_response_code(500);
+                echo "Méthode $methodName introuvable dans $controllerName";
+                return;
+            }
+
             $controller->$methodeName();
         }
     }

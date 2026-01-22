@@ -71,6 +71,8 @@ use Dotenv\Dotenv;
                 return "Erreur d envoi:" . $e->getMessage();
             }
         }
+
+        public function createStudentForm(){}
     }
     
 ?>
