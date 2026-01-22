@@ -1,17 +1,26 @@
 <?php
 
-    require_once __DIR__ . '/../app/core/Router.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../app/core/Router.php';
 
-    $router = new Router();
+session_start();
 
-    $router->get('/', ['StudentController', 'index']);
-    $router->get('/students', ['StudentController', 'students']);
-    $router->get('/student/add', ['StudentController', 'addStudentForm']);
-    $router->get('/register', ['StudentController', 'register']);
-    $router->get('/login', ['StudentController', 'login']);
-    $router->post('/students', ['StudentController', 'storeStudent']);
-    $router->post('/login', ['StudentController', 'postLogin']);
-    // $router->post('/register', ['StudentController', 'authenticate']);
+$router = new Router();
 
-    $router->dispatch($_SERVER['REQUEST_URI']);
-?>
+//auth
+$router->get('/login',  ['AuthController', 'showLogin']);
+$router->post('/login', ['AuthController', 'login']);
+$router->get('/logout', ['AuthController', 'logout']);
+
+//dashboard
+$router->get('/dashboard/student', ['DashboardController', 'student']);
+$router->get('/dashboard/teacher', ['DashboardController', 'teacher']);
+
+//teacher->createStudent
+$router->get('/teacher/students/create', ['UserController', 'createStudentForm']);
+$router->post('/teacher/students',       ['UserController', 'storeStudent']);
+
+//home
+$router->get('/', ['DashboardController', 'home']);
+
+$router->dispatch($_SERVER['REQUEST_URI']);
