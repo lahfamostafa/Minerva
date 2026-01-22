@@ -1,14 +1,18 @@
 <?php
 
+use app\core\BaseController;
+use App\models\User;
+use App\services\AuthService;
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 use Dotenv\Dotenv;
 
     class UserController extends BaseController {
-        private $UserService ; 
-        private $authService;
-
+        public $UserModel ; 
+        public $authService;
+        
         public function __construct(){
             $this->UserModel = new User();
             $this->authService = new AuthService();
@@ -16,7 +20,7 @@ use Dotenv\Dotenv;
 
 
         public function storeTeacher(){
-            $result = $authService->register($_POST,'teacher');
+            $result = $this->authService->register($_POST['nom'] , $_POST['email'] ,$_POST['password'],'teacher');
             if($result == "EMAIL_EXIST"){
                 $error = "Email déja existe";
                 $this->render('teacher','register',compact('error'));
