@@ -5,9 +5,9 @@ namespace App\services;
 use Exception;
 use App\models\User;
     class AuthService{
-        public $UserModel;
+        public User $UserModel;
         public $StudentModel;
-        public $TeacherModel;
+        public  $TeacherModel;
 
         public function __construct(){
             $this->UserModel = new User();
@@ -15,7 +15,7 @@ use App\models\User;
             // $this->TeacherModel = new Teacher();
         }
         public function login(string $email, string $password){
-            $user = $this->userModel->findUserByEmail($email);
+            $user = $this->UserModel->findUserByEmail($email);
             if(!$user)
                 {return['success' => false,'message' => 'Email incorrect'];
             }
@@ -23,16 +23,16 @@ use App\models\User;
                 return['success' =>false,'message' => 'Mot de passe incorrect'];
             }
 
-            $_SESSION['user_id'] = $row['id'];
-            $_SESSION['role'] = $row['role'];
-            $_SESSION['email'] = $row['email'];
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['role'] = $user['role'];
+            $_SESSION['email'] = $user['email'];
             
         }
 
-        public function register(string $nom , string $email , string $password , string $role){
+        public function register(string $nom , string $email, string $password,string $role){
             $row = $this->UserModel->findUserByEmail($email);
             if($row && $row['email'] === $email){
-                throw new Exception("EMAIL_EXIST");
+                throw new Exception("Email déja existe");
             }
             $this->UserModel->create($nom , $email, $password , $role);
         }
