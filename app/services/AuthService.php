@@ -29,12 +29,12 @@ use App\models\User;
             
         }
 
-        public function register(string $nom , string $email, string $password){
+        public function register(string $nom , string $email , string $password , string $role){
             $row = $this->UserModel->findUserByEmail($email);
             if($row && $row['email'] === $email){
-                throw new Exception("Email déja existe");
+                throw new Exception("EMAIL_EXIST");
             }
-            $this->UserModel->create($nom , $email, $password , 'teacher');
+            $this->UserModel->create($nom , $email, $password , $role);
         }
 
         public function currentUser(){
