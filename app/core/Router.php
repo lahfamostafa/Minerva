@@ -38,5 +38,4 @@ require_once "../config/config.php";
         }
     }
 
-    //test push 
 ?>
