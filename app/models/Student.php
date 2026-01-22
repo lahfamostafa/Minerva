@@ -1,4 +1,8 @@
 <?php
+use App\core\Database;
+
+use PDO;
+use PDOException;
 
     class Student{
 

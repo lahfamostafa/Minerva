@@ -1,4 +1,8 @@
 <?php
+USE PDO;
+USE PDOException;
+
+USE App\core\Database;
     class attendance{
         private PDO $pdo;
         public function __construct()
