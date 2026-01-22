@@ -1,4 +1,10 @@
 <?php
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
+use Dotenv\Dotenv;
+
     class UserController extends BaseController {
         private $UserService ; 
         private $authService;
@@ -8,44 +14,63 @@
             $this->authService = new AuthService();
         }
 
-        public function storeUser(){
-            $result = $authService->register($_POST);
-            if($result == "EMAIL_EXIST"){
-                $error = "Email déja existe";
-                $this->render($file,'register',compact('error'));
-                return;
-            }
-            if($_POST['role'] == "teacher")
-                header('Location: '.BASE_URL.'teacher/index');
-            else if($_POST['role'] == "student")
-                header('Location: '.BASE_URL.'student/index');
-            else echo "hadchi makayeeench";
-                
-        }
-
 
         public function storeTeacher(){
             $result = $authService->register($_POST,'teacher');
             if($result == "EMAIL_EXIST"){
                 $error = "Email déja existe";
-                $this->render($file,'register',compact('error'));
+                $this->render('teacher','register',compact('error'));
                 return;
             }
 
-            header('Location: '.BASE_URL.'teacher/index');    
+            header('Location: '.BASE_URL.'teacher/dashboard.php');    
             exit;        
         }
 
         public function storeStudent(){
-            $result = $authService->register($_POST,'student');
+            $NoHash = substr(md5(rand()), 0, 8);
+            $result = $authService->register($_POST['nom'],$_POST['email'],$NoHash,'student');
             if($result == "EMAIL_EXIST"){
                 $error = "Email déja existe";
-                $this->render($file,'register',compact('error'));
+                $this->render('student','register',compact('error'));
                 return;
             }
 
-            header('Location: '.BASE_URL.'student/index');    
+            sendEmail($_POST['email'], $NoHash);
+
+            header('Location: '.BASE_URL.'student/dashboard.php');
+            echo $NoHash;
             exit;        
         }
+
+        public function sendEmail($email, $password){
+            $mail = new PHPMailer(true);
+            try {
+                $mail->SMTPAuth = true;
+                $mail->isSMTP();
+                $mail->Host = $_ENV['SMTP_HOST'];
+                $mail->Username = $_ENV['SMTP_USER'];
+                $mail->Password = $_ENV['SMTP_PASS'];
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port = 587;
+                $mail->setFrom($_ENV['SMTP_USER'], $_ENV['SMTP_NAME']);
+                $mail->addAddress($email);
+                $mail->isHTML(true);
+                $mail->Subject = 'Vos identifiants Minerva';
+                $mail->Body = "
+                    <h2>Bienvenue sur Minerva !</h2>
+                    <p>Voici vos identifiants de connexion :</p>
+                    <p><strong>Email :</strong> $email</p>
+                    <p><strong>Mot de passe :</strong> $password</p>
+                    <p>Connectez-vous sur : Minerva</p>
+                ";
+
+                $mail->send();
+                return 'Email envoyé avec succès';
+            } catch (Exception $e) {
+                return "Erreur d envoi:" . $e->getMessage();
+            }
+        }
     }
+    
 ?>

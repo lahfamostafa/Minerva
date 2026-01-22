@@ -3,11 +3,11 @@
     class AuthController extends BaseController{
         
         public function login(){
-            $this->render('login');
+            $this->render('auth','login');
         }
 
         public function register(){
-            $this->render('register');
+            $this->render('auth','register');
         }
 
     }
