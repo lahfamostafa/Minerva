@@ -24,7 +24,7 @@ use Dotenv\Dotenv;
             if($result == "EMAIL_EXIST"){
                 $error = "Email déja existe";
                 $this->render('teacher','register',compact('error'));
-                return;
+                exit;
             }
 
             header('Location: '.BASE_URL.'teacher/dashboard.php');    
@@ -33,14 +33,15 @@ use Dotenv\Dotenv;
 
         public function storeStudent(){
             $NoHash = substr(md5(rand()), 0, 8);
-            $result = $authService->register($_POST['nom'],$_POST['email'],$NoHash,'student');
+            $result = $this->authService->register($_POST['nom'],$_POST['email'],$NoHash,'student');
             if($result == "EMAIL_EXIST"){
                 $error = "Email déja existe";
                 $this->render('student','register',compact('error'));
-                return;
+                exit;
             }
 
-            sendEmail($_POST['email'], $NoHash);
+            
+            $this->sendEmail($_POST['email'], $NoHash);
 
             header('Location: '.BASE_URL.'student/dashboard.php');
             echo $NoHash;
