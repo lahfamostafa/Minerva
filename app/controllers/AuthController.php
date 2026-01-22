@@ -6,7 +6,7 @@
             $this->render('auth','login');
         }
         public function register(){
-            $this->render('auth','login');
+            $this->render('auth','register');
         }
 
     }
