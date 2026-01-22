@@ -7,9 +7,11 @@
     },
     "authors": [
         {
-            "name": "bouhouchhamza",
-            "email": "bouhouchhamza52@gmail.com"
+            "name": "lahfamostafa",
+            "email": "lahfa.mostafa1@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "phpmailer/phpmailer": "^7.0"
+    }
 }
