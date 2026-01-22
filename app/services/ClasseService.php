@@ -1,69 +1,49 @@
 <?php
+namespace App\services;
 
-    namespace App\core;
-    use Classe;
-    use PDO;
-    use PDOException;
+use App\models\Classe;
 
-    class ClasseService {
-        
-        private Classe $classeModel;
+use Exception;
+use PDO;
+use PDOException;
 
-        public function __construct()
-        {
-            $this->classeModel = new Classe();
-        }
+class ClasseService
+{
 
-        public function getAllClasses(){
-            return $this->classeModel->getAllClasses();
-        }
-        public function getClassById($id){
-            return $this->classeModel->getClassById($id);
-        }
-        public function getClassesByTeacherId($teacherId){
-            return $this->classeModel->getClassesByTeacherId($teacherId);
-        }
+    private Classe $classeModel;
 
-        public function deleteClass($id){
-            $this->classeModel->deleteClass($id);
-        }
-        public function updateClass($id, $data){
-            $this->classeModel->updateClass($id, $data);
-        }
-        public function assignStudentToClass($studentId, $classId){
-            $this->classeModel->assignStudentToClass($studentId, $classId);
-        }
-        public function removeStudentFromClass($studentId){
-            $this->classeModel->removeStudentFromClass($studentId);
-        }
-        public function getStudentsInClass($classId){
-            return $this->classeModel->getStudentsInClass($classId);
-        }
-        public function getTeachersOfClass($classId){
-            return $this->classeModel->getTeachersOfClass($classId);
-        }
-        public function addTeacherToClass($teacherId, $classId){
-            $this->classeModel->addTeacherToClass($teacherId, $classId);
-        }
-        public function removeTeacherFromClass($teacherId, $classId){
-            $this->classeModel->removeTeacherFromClass($teacherId, $classId);
-        }
+    public function __construct()
+    {
+        $this->classeModel = new Classe();
+    }
 
-        public function createClass($data){
-            $this->classeModel->createClass($data);
+    public function createClass(string $name, int $teacherId){
+        if(empty($name)){
+            throw new Exception("Le nom de la classe est obligatoire");
         }
-        public function createClasse($data){
-            $db = Database::getInstance()->getConnection();
-            $stmt = $db->prepare("INSERT INTO classes (name, teacher_id) VALUES (:name, :teacher_id)");
-            $stmt->bindParam(':name', $data['name']);
-            $stmt->bindParam(':teacher_id', $data['teacherId']);
-            $stmt->execute();
-            }
-
-    
+        return $this->classeModel->createClasse([
+            'name' => $name,
+            'teacher_id' => $teacherId
+        ]);
+    }
+    public function assignStudent(int $studentId, int $classId){
+        if($studentId <= 0 || $classId <=0){
+            throw new Exception("Données invalides");
         }
+        return $this->classeModel->assignStudent($studentId, $classId);
+    }
 
+    public function getTeacherClass(int $teacherId){
+        return $this->classeModel->getClassByTeacherId($teacherId);
+    }
 
-
-
-?>
+    public function getClassStudent(int $classId){
+        return $this->classeModel->getStudents($classId);
+    }
+    public function getStudentClass(int $studentId){
+        return $this->classeModel->getClassByStudent($studentId);
+    }
+    public function getTeacherClasses(int $teacherId){
+        return $this->getTeacherClass($teacherId);
+    }
+}
