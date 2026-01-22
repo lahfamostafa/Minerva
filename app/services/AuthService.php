@@ -29,7 +29,7 @@ use App\models\User;
             
         }
 
-        public function register(string $nom , string $email, string $password){
+        public function register(string $nom , string $email, string $password,string $role){
             $row = $this->UserModel->findUserByEmail($email);
             if($row && $row['email'] === $email){
                 throw new Exception("Email déja existe");
