@@ -34,7 +34,7 @@ use App\models\User;
             if($row && $row['email'] === $email){
                 throw new Exception("Email déja existe");
             }
-            $this->UserModel->create($nom , $email, $password , $role);
+            return $this->UserModel->create($nom , $email, $password , $role);
         }
 
         public function currentUser(){
