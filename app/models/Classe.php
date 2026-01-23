@@ -30,11 +30,12 @@ USE App\core\Database;
             $stmt=$this->pdo->prepare($sql);
             return $stmt->execute([$studentId, $classId]);
         }
+
         public function getClassByTeacherId(int $teacherId){
             $sql = "SELECT * FROM classes WHERE teacher_id = ?";
             $stmt =$this->pdo->prepare($sql);
             $stmt->execute([$teacherId]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         public function getStudents(int $classId){
@@ -49,10 +50,10 @@ USE App\core\Database;
             $stmt->execute([$studentId]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }
-        public function getTeacherClasse(int $user_id){
-            $sql='select classes.* FROM classes JOIN teacher_classes ON classes.id=teacher_classes.class_id WHERE teacher_classes.teacher_id = ?';
+        public function getTeacherClasse($user_id){
+            $sql="SELECT c.* , u.name as userName FROM classes c JOIN users u ON c.teacher_id=u.id WHERE teacher_id = ? and u.role = 'teacher'";
             $stmt=$this->pdo->prepare($sql);
             $stmt->execute([$user_id]);
-            $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
     }
