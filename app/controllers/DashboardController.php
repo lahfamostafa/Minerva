@@ -1,38 +1,42 @@
 <?php
 
 use App\services\AuthService;
-    class DashboardController{
+
+    class DashboardController extends App\core\BaseController{
+
+        private AuthService $auth;
+
+        public function __construct(){
+            $this->auth = new AuthService();
+        }
 
         public function student(){
-            $AuthService = new AuthService();
-            $user = $AuthService->currentUser();
-            if (!$user && $user['role'] !== "studet") {
-                header('Location: /login');
+            $user = $this->auth->currentUser();
+            if (!$user || strtolower($user['role']) !== "student") {
+                header("Location: " . BASE_URL . "/login");
                 exit;
             }
 
-            require_once __DIR__ . "/../views/student/dashboard.php";
+            $this->render('student' , 'dashboard' , compact('user'));
         }
 
         public function teacher(){
-            $AuthService = new AuthService();
-            $user = $AuthService->currentUser();
-            if (!$user && $user['role'] !== "teacher") {
-                header('Location: /login');
+            $user = $this->auth->currentUser();
+            if (!$user || strtolower($user['role']) !== "teacher") {
+                header("Location: ". BASE_URL ."/login");
                 exit;
             }
 
-            require_once __DIR__ . "/../views/teacher/dashboard.php";
+            $this->render('teacher' , 'dashboard' , compact('user'));
         }
 
         public function home(){
-            $AuthService = new AuthService();
-            $user = $AuthService->currentUser();
+            $user = $this->auth->currentUser();
 
-            if(!$user) {header('Location: /login');exit;}
+            if(!$user) {header("Location: " . BASE_URL . "/login");;exit;}
 
-            if($user['role'] === 'teacher') {header('Location: /Dashboard/teacher');exit;}
-            header('Location: /Dashboard/student');
+            if(strtolower($user['role']) === 'teacher') {header("Location: ". BASE_URL ."/dashboard/teacher");exit;}
+            header("Location: ". BASE_URL ."/dashboard/student");
             exit;
         }
     }
