@@ -12,9 +12,7 @@ use PDO;
 
         public function create(string $nom , string $email, string $password , string $role){
             $stm = $this->pdo->prepare("insert into users (name , email , password , role) values (?,?,?,?)");
-            // if($role === "student"){
-            //     email....
-            // }
+    
             $hashed = password_hash($password , PASSWORD_BCRYPT);
             return $stm->execute([$nom , $email , $hashed , $role]);
         }

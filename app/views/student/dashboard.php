@@ -12,7 +12,7 @@
         <h1 class="text-2xl font-bold">Bienvenue, <?= htmlspecialchars($user['name'] ?? '') ?></h1>
         <p class="text-gray-500">Espace étudiant</p>
       </div>
-      <a href="/logout" class="px-4 py-2 rounded-xl bg-gray-900 text-white">Se déconnecter</a>
+      <a href="<?= BASE_URL ?>/logout" class="px-4 py-2 rounded-xl bg-gray-900 text-white">Se déconnecter</a>
     </div>
 
     <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">

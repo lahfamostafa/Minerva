@@ -1,44 +1,3 @@
-<?php
- require_once __DIR__ . "/../../../vendor/autoload.php";
-    session_start();
-
-
-    use App\services\AuthService;
-
-    $error = null;
-
-    if($_SERVER['REQUEST_METHOD'] === 'POST'){
-
-        $email = filter_input(INPUT_POST , 'email' , FILTER_SANITIZE_EMAIL);
-        $password = $_POST['password'] ?? null;
-
-        if(!$email || !$password){
-            $error = "email et password required";
-        }else{
-            try{
-                $auth = new AuthService();
-                $auth->login($email,$password);
-    
-                $user = $auth->currentUser();
-    
-                if (!$user) {throw new Exception("Session invalid");}
-    
-                switch($user['role']){
-                    case 'student':
-                        header("Location: ../dashboard/student.php");
-                        exit;
-                    case 'teacher':
-                        header("Location: ../dashboard/teacher.php");
-                        exit;
-                    default : $error = "role invalide";
-                }
-                exit;
-            }catch(Exception $e){
-                $error = $e->getMessage();
-            }
-        }
-    }
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,7 +15,7 @@
                 Accédez à votre espace de gestion
             </p>
         </div>
-        <form method="POST" class="space-y-5">
+        <form method="POST" action="<?= BASE_URL ?>/login" class="space-y-5">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">
                     Adresse email
@@ -78,7 +37,7 @@
             <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition duration-200 shadow-lg">Se connecter</button>
         </form>
         <p class="text-center text-sm text-gray-600 mt-6"> Je suis ensegnant , pas encore de compte ?
-            <a href="register.php" class="text-indigo-600 font-medium hover:underline">Créer un compte</a>
+            <a href="<?= BASE_URL ?>/register" class="text-indigo-600 font-medium hover:underline">Créer un compte</a>
         </p>
     </div>
 </body>

@@ -1,39 +1,3 @@
-<?php
-require_once __DIR__ . "/../../../vendor/autoload.php";
-
-    session_start();
-    use App\services\AuthService;
-
-    $error = null;
-    $success = null;
-
-    if($_SERVER['REQUEST_METHOD'] === 'POST'){
-        try {
-            $auth = new AuthService();
-
-            $auth->register(
-                $_POST['nom'],
-                $_POST['email'],
-                $_POST['password']
-            );
-            
-            $auth->login($_POST['email'], $_POST['password']);
-            $user = $auth->currentUser();
-
-            switch($user['role']){
-                case 'student':
-                    header("Location: ../dashboard/student.php");
-                    exit;
-                case 'teacher':
-                    header("Location: ../dashboard/teacher.php");
-                    exit;
-            }
-        } catch (Exception $e) {
-            $error = $e->getMessage();
-        }
-    }
-?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -59,7 +23,7 @@ require_once __DIR__ . "/../../../vendor/autoload.php";
                 <?= htmlspecialchars($success) ?>
             </div>
         <?php endif; ?>
-        <form method="POST" class="space-y-4">
+        <form method="POST" action="<?= BASE_URL ?>/register" class="space-y-4">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Nom</label>
                 <input type="text" name="nom" required placeholder="Votre nom" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
@@ -77,7 +41,7 @@ require_once __DIR__ . "/../../../vendor/autoload.php";
             <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition shadow-lg mt-4">S'inscrire</button>
         </form>
         <p class="text-center text-sm text-gray-600 mt-6">Déjà un compte ?
-            <a href="login.php" class="text-indigo-600 font-medium hover:underline">Se connecter</a>
+            <a href="<?= BASE_URL ?>/login" class="text-indigo-600 font-medium hover:underline">Se connecter</a>
         </p>
     </div>
 
