@@ -11,14 +11,16 @@ use App\services\AuthService;
             $this->authService = new AuthService();
         }
 
+        //post
         public function createStudent(){
             try{
                 $nom = $_POST['nom'];
                 $email = $_POST['email'];
+                $classId = $_POST['class_id'];
     
-                if($nom === '' || $email === '')
+                if($nom === '' || $email === '' || $classId === '')
                     throw new Exception("Tous les champs sont obligatoires");
-                $this->authService->storeStudent($nom,$email);
+                $this->authService->storeStudent($nom , $email , $classId);
     
                 header("Location: " . BASE_URL . "/dashboard/teacher");
                 exit;
