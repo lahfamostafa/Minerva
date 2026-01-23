@@ -2,35 +2,47 @@
 
 use App\services\ClasseService;
 
-class ClassController
-{
+class ClassController extends App\core\BaseController{
 
     public ClasseService $classeService;
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->classeService = new ClasseService();
     }
 
-    public function store()
-    {
+    //get
+    public function createClasseForm(){
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /login');
+            header("Location: " . BASE_URL . "/login");
             exit;
         }
-        $role = 'teacher';
-        if ($_SESSION['user']['role'] !== $role) {
-            die("you don't have the permission");
+        if (strtolower($_SESSION['role'] ?? '') !== 'teacher') {
+            http_response_code(403);
+            die("Vous n'avez pas la permission");
+        }
+
+        $this->render('teacher','add_classe',['error' => null]);
+    }
+
+    //post
+    public function store(){
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: " . BASE_URL . "/login");
+            exit;
+        }
+        if (strtolower($_SESSION['role'] ?? '') !== 'teacher') {
+            http_response_code(403);
+            die("Vous n'avez pas la permission");
         }
         try {
-            $nom = $_POST['nom'];
-            $teacherId = $_SESSION['user_id'];
+            $nom = $_POST['name'];
+            $teacherId = (int) $_SESSION['user_id'];
             $this->classeService->createClass($nom, $teacherId);
 
-            header("Location: /teacher/dashboard");
+            header("Location: " . BASE_URL . "/dashboard/teacher");
             exit;
         } catch (Exception $e) {
-            echo $e->getMessage();
+            $this->render('teacher','add_classe',['error' => $e->getMessage()]) ;
         }
     }
     public function assignStudent(){

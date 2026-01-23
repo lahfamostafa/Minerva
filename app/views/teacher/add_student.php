@@ -1,3 +1,14 @@
+<?php
+
+    use App\Models\Classe;
+
+    $classModel = new Classe();
+    $teacherId = (int)($_SESSION['user_id'] ?? 0);
+    if($teacherId === 0) die("teacher introuvable");
+    $classes = $classModel->getTeacherClasse($teacherId);
+
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -36,6 +47,21 @@
                 required
                 class="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-indigo-500"
             >
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Classe</label>
+            <?php if (empty($classes)): ?>
+                <p class="text-sm text-red-600">Aucune classe trouvée. <a class="text-sm text-blue-600 hover:text-blue-800" href="<?= BASE_URL ?>/teacher/classes/create">Créez une classe d'abord.</p></a>
+            <?php else: ?>
+                <select name="class_id" class="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-indigo-500">
+                <?php foreach ($classes as $c):?>
+                    <option value="<?= (int)$c['id'] ?>">
+                        <?= htmlspecialchars($c['name']) ?> - (<?= htmlspecialchars($c['userName'] ?? '') ?>)
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <?php endif; ?>
         </div>
 
         <button
