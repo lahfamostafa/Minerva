@@ -3,6 +3,7 @@ namespace App\services;
 
 use App\core\BaseController;
 use App\models\User;
+use App\services\ClasseService;
 
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -12,9 +13,11 @@ use Dotenv\Dotenv;
 
     class AuthService{
         private User $UserModel;
+        private ClasseService $ClassService;
 
         public function __construct(){
             $this->UserModel = new User();
+            $this->ClassService = new ClasseService();
             // $this->StudentModel = new Student();
             // $this->TeacherModel = new Teacher();
         }
@@ -50,11 +53,13 @@ use Dotenv\Dotenv;
             return $this->register($nom, $email, $password,'teacher');
         }
 
-        public function storeStudent($nom , $email){
+        public function storeStudent($nom , $email , $classId){
             $NoHash = substr(md5(rand()), 0, 8);
             
-            $this->register($nom,$email,$NoHash,'student');
-            $this->sendEmail($email, $NoHash);
+            $studentInfo = $this->register($nom,$email,$NoHash,'student');
+            if($studentInfo) $assignResult = $this->ClassService->assignStudent($studentInfo , $classId);
+            if($assignResult) $this->sendEmail($email, $NoHash);
+            
             
             return $NoHash;
         }

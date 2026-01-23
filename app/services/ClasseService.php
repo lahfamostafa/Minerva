@@ -7,8 +7,7 @@ use Exception;
 use PDO;
 use PDOException;
 
-class ClasseService
-{
+class ClasseService{
 
     private Classe $classeModel;
 
@@ -23,7 +22,7 @@ class ClasseService
         }
         return $this->classeModel->createClasse([
             'name' => $name,
-            'teacher_id' => $teacherId
+            'teacherId' => $teacherId
         ]);
     }
     public function assignStudent(int $studentId, int $classId){
