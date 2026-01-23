@@ -31,4 +31,9 @@ $router->post('/teacher/students',       ['UserController', 'createStudent']);
 //home
 $router->get('/', ['DashboardController', 'home']);
 
+//classe
+$router->get('/teacher/classes/create', ['ClassController', 'createClasseForm']);
+$router->post('/teacher/classes', ['ClassController', 'store']);
+
+
 $router->dispatch($_SERVER['REQUEST_URI']);
