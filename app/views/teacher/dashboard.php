@@ -26,13 +26,21 @@
           Ajouter un étudiant
         </a>
 
-        <!-- LOGOUT -->
         <a
-          href="<?= BASE_URL ?>/logout"
-          class="px-4 py-2 rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition"
+        href="<?= BASE_URL ?>/teacher/classes/create"
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-green-600 text-white font-medium hover:bg-green-700 transition"
         >
-          Se déconnecter
-        </a>
+        + Ajouter une classe
+      </a>
+      
+      <!-- LOGOUT -->
+      <a
+        href="<?= BASE_URL ?>/logout"
+        class="px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-gray-800 transition"
+      >
+        Se déconnecter
+      </a>
+
       </div>
     </div>
 
