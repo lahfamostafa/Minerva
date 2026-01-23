@@ -1,6 +1,6 @@
 <?php
 
-require_once "../config/config.php";
+require_once __DIR__ . "/../config/config.php";
     class Router{
         public $routes = [];
 
@@ -14,9 +14,13 @@ require_once "../config/config.php";
         public function dispatch($uri){
             $path = parse_url($uri, PHP_URL_PATH);
 
-            $basePath = BASE_URL;
-            $path = str_replace($basePath , '' ,$path);
-            $path = $path ?: '/';
+            $baseDir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/');
+            if($baseDir !== '' && strpos($path , $baseDir) === 0){
+                $path = substr($path , strlen($baseDir));
+            }
+            $path = '/' . ltrim($path ,'/');
+            $path = rtrim($path , '/');
+            if($path === '') $path = '/';
 
             $method = $_SERVER['REQUEST_METHOD'];
             $action = $this->routes[$method][$path] ?? null;
@@ -51,7 +55,7 @@ require_once "../config/config.php";
 
             if(!method_exists($controller , $methodeName)){
                 http_response_code(500);
-                echo "Méthode $methodName introuvable dans $controllerName";
+                echo "Méthode $methodeName introuvable dans $controllerName";
                 return;
             }
 
