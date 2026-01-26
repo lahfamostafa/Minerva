@@ -23,15 +23,29 @@ require_once __DIR__ . "/../config/config.php";
             if($path === '') $path = '/';
 
             $method = $_SERVER['REQUEST_METHOD'];
-            $action = $this->routes[$method][$path] ?? null;
-
-            if(!$action){
-                http_response_code(404);
-                echo "404 Not found<br>";
-                echo 'methode : ' . $method . '<br>path : ' . $path . '<br>action : ' . $action;
-                return;
+            if(isset($this->routes[$method][$path])){
+                $action = $this->routes[$method][$path];
+                return $this->runAction($action ,[]);
             }
 
+            foreach (($this->routes[$method] ?? []) as $routes => $action) {
+                if(strpos($routes , '{') === false) continue ;
+
+                $pattern = preg_replace('#\{[a-zA-Z_]+\}#', '([0-9]+)',$routes);
+                $pattern = '#^' . $pattern . '$#';
+
+                if(preg_match($pattern ,$path , $matches)){
+                    array_shift($matches);
+                    return $this->runAction($action , $matches);
+                }
+            }
+
+            http_response_code(404);
+            echo "404 Not found<br>";
+            echo 'methode : ' . $method . '<br>path : ' . $path;
+            }
+            
+            private function runAction($action ,array $params){
             $controllerName = $action[0];
             $methodeName = $action[1];
 
@@ -59,7 +73,7 @@ require_once __DIR__ . "/../config/config.php";
                 return;
             }
 
-            $controller->$methodeName();
+            call_user_func_array([$controller , $methodeName] , $params);
         }
     }
 

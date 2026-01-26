@@ -2,8 +2,6 @@
 
 use App\services\AuthService;
 
-
-
     class UserController extends App\core\BaseController {
         public $authService;
         
