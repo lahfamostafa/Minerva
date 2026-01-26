@@ -47,12 +47,11 @@ class ClassController extends App\core\BaseController{
     }
     public function assignStudent(){
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /login');
+            header("Location: " . BASE_URL . "/login");
             exit;
         }
-        $role = 'teacher';
-        if ($_SESSION['user']['role'] !== $role) {
-            die("you don't have the permission");
+        if (strtolower($_SESSION['role'] ?? '') !== 'teacher') {
+            die("Vous n'avez pas la permission");
         }
         try{
             $studentId = $_POST['student_id'];
@@ -62,26 +61,32 @@ class ClassController extends App\core\BaseController{
             echo $e->getMessage();
         }
     }
-      public function myClass(){
-        if (!isset($_SESSION['user_id'])) {
-            header('Location: /login');
-            exit;
-        }
-        $role = 'teacher';
-        if ($_SESSION['user']['role'] !== $role) {
-            die("you don't have the permission");
-        }
-        $classes = $this->classeService->getTeacherClasses($_SESSION['user_id']);
-
-        require '../app/views/class/teacher_classes.php';
+    public function myClass(){
+        $teacherId = (int)($_SESSION['user_id'] ?? 0);
+        if ($teacherId === 0) die("Ensegnant introuvable");
+        
+        return $this->classeService->getTeacherClasses($teacherId);
     }
-    public function myClasses(){
+
+    public function ClasseStudents($id){
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /login');
+            header("Location: " . BASE_URL . "/login");
             exit;
         }
-        $class = $this->classeService->getStudentClass($_SESSION['user_id']);
+        if (strtolower($_SESSION['role'] ?? '') !== 'teacher') {
+            http_response_code(403);
+            die("Vous n'avez pas la permission");
+        }
+        $classId = (int)$id;
+        $class = $this->classeService->findClassById($classId);
+        $students = $this->classeService->getClassStudents($classId);
+        $this->render('teacher','classe',['class'=>$class , 'students'=>$students,'error'=>null]);
+    }
 
-        require '../app/views/class/student_class.php';
+    public function myClasses(){
+        $teacherId = (int)($_SESSION['user_id'] ?? 0);
+        if ($teacherId === 0) die("Ensegnant introuvable");
+
+        return $this->classeService->getTeacherClass($teacherId);
     }
 }

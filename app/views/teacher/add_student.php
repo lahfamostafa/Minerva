@@ -1,11 +1,10 @@
 <?php
 
-    use App\Models\Classe;
+    require_once __DIR__ ."/../../../App\controllers\ClassController.php";
 
-    $classModel = new Classe();
-    $teacherId = (int)($_SESSION['user_id'] ?? 0);
-    if($teacherId === 0) die("teacher introuvable");
-    $classes = $classModel->getTeacherClasse($teacherId);
+    $classController = new ClassController();
+
+    $classes = $classController->myClass();
 
 ?>
 

@@ -2,6 +2,7 @@
 namespace App\services;
 
 use App\models\Classe;
+use App\models\User;
 
 use Exception;
 use PDO;
@@ -10,10 +11,11 @@ use PDOException;
 class ClasseService{
 
     private Classe $classeModel;
+    private User $userModel;
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->classeModel = new Classe();
+        $this->userModel = new User();
     }
 
     public function createClass(string $name, int $teacherId){
@@ -36,13 +38,22 @@ class ClasseService{
         return $this->classeModel->getClassByTeacherId($teacherId);
     }
 
-    public function getClassStudent(int $classId){
+    public function getClassStudents(int $classId){
         return $this->classeModel->getStudents($classId);
     }
     public function getStudentClass(int $studentId){
         return $this->classeModel->getClassByStudent($studentId);
     }
     public function getTeacherClasses(int $teacherId){
-        return $this->getTeacherClass($teacherId);
+        return $this->classeModel->getTeacherClasse($teacherId);
     }
+
+    public function findClassById(int $id){
+        return $this->classeModel->findClassById($id);
+    }
+
+    public function updateAssignemant(int $studentId, int $classId){
+        return $this->classeModel->updateAssignemant($studentId , $classId);
+    }
+
 }

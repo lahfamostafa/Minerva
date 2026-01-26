@@ -61,7 +61,7 @@ create table attendance(
     class_id int not null,
     student_id int not null,
     date_attendance date not null,
-    status ENUM('present','absent'),
+    status ENUM('present','absent') DEFAULT 'present',
     UNIQUE (student_id, date_attendance),
     foreign key(class_id) REFERENCES classes(id) on delete cascade,
     foreign key(student_id) REFERENCES users(id)

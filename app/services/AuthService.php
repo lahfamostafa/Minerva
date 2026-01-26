@@ -18,8 +18,6 @@ use Dotenv\Dotenv;
         public function __construct(){
             $this->UserModel = new User();
             $this->ClassService = new ClasseService();
-            // $this->StudentModel = new Student();
-            // $this->TeacherModel = new Teacher();
         }
         public function login(string $email, string $password){
             $user = $this->UserModel->findUserByEmail($email);
@@ -58,10 +56,8 @@ use Dotenv\Dotenv;
             
             $studentInfo = $this->register($nom,$email,$NoHash,'student');
             if($studentInfo) $assignResult = $this->ClassService->assignStudent($studentInfo , $classId);
-            if($assignResult) $this->sendEmail($email, $NoHash);
-            
-            
-            return $NoHash;
+            if($assignResult) 
+            return $this->sendEmail($email, $NoHash);             
         }
 
         public function sendEmail($email, $password){

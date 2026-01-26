@@ -14,7 +14,9 @@ use PDO;
             $stm = $this->pdo->prepare("insert into users (name , email , password , role) values (?,?,?,?)");
     
             $hashed = password_hash($password , PASSWORD_BCRYPT);
-            return $stm->execute([$nom , $email , $hashed , $role]);
+            if( $stm->execute([$nom , $email , $hashed , $role]))
+                return $this->pdo->lastInsertId();
+            return false ;
         }
 
         public function findUserById(int $id){

@@ -34,6 +34,13 @@ $router->get('/', ['DashboardController', 'home']);
 //classe
 $router->get('/teacher/classes/create', ['ClassController', 'createClasseForm']);
 $router->post('/teacher/classes', ['ClassController', 'store']);
+$router->get('/teacher/classes/{id}', ['ClassController', 'ClasseStudents']);
+
+//student
+$router->post('/teacher/classes/remove', ['StudentController', 'removeStudent']);
+$router->post('/teacher/classes/updateF', ['StudentController', 'updateForm']);
+$router->post('/teacher/students/update', ['StudentController', 'update']);
 
 
 $router->dispatch($_SERVER['REQUEST_URI']);
+?>
