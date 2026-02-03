@@ -41,6 +41,8 @@ $router->post('/teacher/classes/remove', ['StudentController', 'removeStudent'])
 $router->post('/teacher/classes/updateF', ['StudentController', 'updateForm']);
 $router->post('/teacher/students/update', ['StudentController', 'update']);
 
+//attendance
+$router->post('/teacher/attendance/toggle', ['AttendanceController', 'updateAtt']);
 
 $router->dispatch($_SERVER['REQUEST_URI']);
 ?>

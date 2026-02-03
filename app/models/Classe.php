@@ -38,7 +38,7 @@ USE App\core\Database;
         }
 
         public function getStudents(int $classId){
-            $sql ="SELECT u.* , c.name as nom_classe from users u join student_class sc on sc.student_id = u.id join classes c on sc.class_id = c.id where sc.class_id = ?";
+            $sql ="SELECT u.* , c.name as nom_classe , a.status from users u join student_class sc on sc.student_id = u.id join classes c on sc.class_id = c.id join attendance a on a.student_id = u.id where sc.class_id = ?";
             $stmt= $this->pdo->prepare($sql);
             $stmt->execute([$classId]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
