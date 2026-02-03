@@ -41,6 +41,27 @@
                 <div class="text-sm text-gray-500"><?= htmlspecialchars($st['email'] ?? '') ?></div>
               </div>
 
+              <?php $isPresent = (($st['status'] ?? 'present') == 'present') ?>
+              <form action="<?= BASE_URL ?>/teacher/attendance/toggle" method="POST" class="flex items-center gap-3">
+                <input type="hidden" name="class_id" value="<?= (int)$class['id'] ?>">
+                <input type="hidden" name="student_id" value="<?= (int)$st['id'] ?>">
+                <input type="hidden" name="date" value="<?= date('Y-m-d') ?>">
+
+                <button type="submit" 
+                  class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border text-sm font-semibold transition<?= $isPresent? 'bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100' :
+                   'bg-rose-50 border-rose-200 text-rose-700 hover:bg-rose-100'?>" title="Cliquer pour changer">
+                   <span class="relative inline-flex items-center">
+                    <span class="w-10 h-6 rounded-full transition
+                      <?= $isPresent ? 'bg-emerald-500': 'bg-rose-500' ?>">
+                    </span>
+                    <span class="absolute left-1 w-4 h-4 bg-white rounded-full transition
+                      <?= $isPresent ? 'translate-x-4' : '' ?>">
+                    </span>
+                  </span>
+                  <?= $isPresent ? 'Present' : 'Absent' ?>
+                </button>
+              </form>
+        
               <div class="flex gap-2">
                 <form method="POST" action="<?= BASE_URL ?>/teacher/classes/updateF">
                   <input type="hidden" name="class_id" value="<?= (int)$class['id'] ?>">

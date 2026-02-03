@@ -32,7 +32,7 @@
 
     <div class="mt-6 bg-white rounded-2xl shadow p-6">
       <h2 class="text-lg font-bold mb-2">Mes informations</h2>
-      <p class="text-gray-600">Ici tu peux afficher les cours / tâches / projets plus tard.</p>
+      <p class="text-gray-600">Les cours / tâches / projets plus tard.</p>
     </div>
   </div>
 </body>

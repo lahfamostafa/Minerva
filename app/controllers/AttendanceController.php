@@ -1,39 +1,27 @@
 <?php
 
-use app\services\AttendanceService;
+use App\services\AttendanceService;
 
 class AttendanceController{
-    private AttendanceService $attendanceService;
-    public function __construct()
-    {
-        $this->attendanceService = new AttendanceService();
+    private AttendanceService $AttendanceService;
+    public function __construct(){
+        $this->AttendanceService = new AttendanceService();
     }
 
-    public function store(){
-        if(!isset($_SESSION['user_id'])){
-            header('Location: \login');
-            exit;
+    public function updateAtt(){
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: " . BASE_URL . "/login"); exit;
         }
-        $role='teacher';
-        if($_SESSION['user']['role'] !== $role){
-            die("permission denied");
+        if (strtolower($_SESSION['role'] ?? '') !== 'teacher') {
+            http_response_code(403); die("Permission denied");
         }
-        $this->attendanceService->markAttendance(
-            $_POST['class_id'],
-            $_POST['student_id'],
-            $_POST['date'],
-            $_POST['status']
-        );
-        header("Location: /teacher/dashboard");
+        $classId = $_POST['class_id'];
+        $studentId = $_POST['student_id'];
+        $date = $_POST['date'];
+
+        $this->AttendanceService->changerAttendance($classId , $studentId , $date);
+        header("Location: " . BASE_URL . "/teacher/classes/" . $classId);
         exit;
     }
-    public function myAttendance(){
-        if(!isset($_SESSION['user_id'])){
-            header('Location: /login');
-            exit;
-        }
-        $attendance = $this->attendanceService->getMyAttendance($_SESSION['user_id']);
-
-        require '../app/views/attendance/my.php';
-    }
+    
 }

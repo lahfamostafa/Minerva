@@ -20,6 +20,9 @@ use Dotenv\Dotenv;
             $this->ClassService = new ClasseService();
         }
         public function login(string $email, string $password){
+            $email = trim($email);
+            $password = trim($password);
+
             $user = $this->UserModel->findUserByEmail($email);
             if(!$user)
                 throw new Exception("Email incorrect");
@@ -54,10 +57,10 @@ use Dotenv\Dotenv;
         public function storeStudent($nom , $email , $classId){
             $NoHash = substr(md5(rand()), 0, 8);
             
-            $studentInfo = $this->register($nom,$email,$NoHash,'student');
-            if($studentInfo) $assignResult = $this->ClassService->assignStudent($studentInfo , $classId);
-            if($assignResult) 
-            return $this->sendEmail($email, $NoHash);             
+            $studentId = $this->register($nom,$email,$NoHash,'student');
+            $this->ClassService->assignStudent($studentId , $classId);
+            $this->sendEmail($email, $NoHash);             
+            return (int)$studentId;
         }
 
         public function sendEmail($email, $password){
@@ -90,8 +93,8 @@ use Dotenv\Dotenv;
         }
 
         public function logout(){
-            session_destroy();
             $_SESSION = [];
+            session_destroy();
         }
     }
     

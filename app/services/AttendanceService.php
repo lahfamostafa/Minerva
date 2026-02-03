@@ -1,5 +1,5 @@
 <?php
-namespace app\services;
+namespace App\services;
 use App\Models\attendanceModel;
 use Exception;
 
@@ -9,16 +9,23 @@ class AttendanceService{
     {
         $this->attendanceModel = new attendanceModel();
     }
-    public function markAttendance(int $classId, int $studentId, string $date, string $status){
-        if(!in_array($status,['present','absent'])){
-            throw new Exception("status invalide");
+    public function markAttendance(int $classId, int $studentId){
+        if ($studentId <= 0) {
+            throw new Exception("student_id invalide");
         }
-        if($this->attendanceModel->findByStudentAndDate($studentId,$date)){
+
+        $date = date('Y-m-d');
+        if($this->attendanceModel->findByStudentAndDate($studentId, $classId, $date)){
             throw new Exception('présent déja marquee');
         }
-        return $this->attendanceModel->mark($classId,$studentId,$date,$status);
+        return $this->attendanceModel->mark($classId,$studentId,$date);
     }
-    public function getMyAttendance(int $stuentId){
-        return $this->attendanceModel->getByStudent($stuentId);
+    
+    public function changerAttendance(int $classId , int $studentId , string $date){
+        $current = $this->attendanceModel->getStatus($classId ,$studentId ,$date);
+        if($current === null)
+            return $this->attendanceModel->updateAbsence($classId, $studentId ,$date, 'absent'); 
+        $new = ($current === 'present') ? 'absent' : 'present';
+        return $this->attendanceModel->updateAbsence($classId, $studentId ,$date, $new);            
     }
 }

@@ -15,8 +15,8 @@ use PDO;
     
             $hashed = password_hash($password , PASSWORD_BCRYPT);
             if( $stm->execute([$nom , $email , $hashed , $role]))
-                return $this->pdo->lastInsertId();
-            return false ;
+                return (int)$this->pdo->lastInsertId();
+            return 0 ;
         }
 
         public function findUserById(int $id){
