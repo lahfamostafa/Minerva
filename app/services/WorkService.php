@@ -1,11 +1,12 @@
 <?php
-
+namespace App\services;
+use App\Models\Work;
 class WorkService{
-    private workModel $workModel;
+    private work $work;
 
     public function __construct()
     {
-        $this->workModel = new workModel();
+        $this->work = new work();
     }
     public function createWork(array $data){
         if(
@@ -17,13 +18,13 @@ class WorkService{
                 die("Tous les champs sont obligatoires");
             } 
 
-           return $this->workModel->create($data);
+           return $this->work->create($data);
     }
     public function getWorkByClassId(int $classId){
-        $this->workModel->getByClass($classId);
+        return $this->work->getByClass($classId);
     }
     public function getWork(int $id){
-        return $this->workModel->findById($id);
+        return $this->work->findById($id);
     }
     public function updateWork(int $id, array $data){
         if(
@@ -34,9 +35,9 @@ class WorkService{
             ){
                 die("Tous les champs sont obligatoires");
             } 
-            return $this->workModel->update($id, $data);
+            return $this->work->update($id, $data);
     }
     public function deletWork($id){
-        return $this->workModel->delete($id);
+        return $this->work->delete($id);
     }
 }

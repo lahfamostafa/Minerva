@@ -64,7 +64,7 @@ create table attendance(
     status ENUM('present','absent') DEFAULT 'present',
     UNIQUE (student_id, date_attendance),
     foreign key(class_id) REFERENCES classes(id) on delete cascade,
-    foreign key(student_id) REFERENCES users(id)
+    foreign key(student_id) REFERENCES users(id)on delete cascade
 );
 
 create table chat_messages(

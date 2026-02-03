@@ -1,8 +1,9 @@
 <?php
-
+namespace App\models;
 use App\core\Database;
+use PDO;
 
- class workModel{
+ class work{
 
     private PDO $pdo;
 
@@ -33,7 +34,7 @@ use App\core\Database;
         $sql="SELECT * FROM works WHERE class_id=?";
         $stmt=$this->pdo->prepare($sql);
         $stmt->execute([$classId]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function update(int $id, array $data){
         $sql = "UPDATE works SET title = ?, description = ?, due_date = ? WHERE id = ?";
